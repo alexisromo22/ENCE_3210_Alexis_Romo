@@ -1,0 +1,43 @@
+
+//HERE  WE ARE DEFINING MY ARRAY SIZE ALONG WITH ITS VARIABLE NAME
+#define ARRAY_SIZE 512
+
+//HERE WE ARE INTIALIZING OUR ARRAY TO START AT ZERO
+//HERE WE ARE ALSO STORING THE 512 VALUES TO BE UNSIGNED INTERGER VALUES
+unsigned int result[ARRAY_SIZE] = {0};
+
+
+//HERE WE ARE CREATING A FUNCTION THAT WILL TAKING IN THE VALUE AND SQUARING IT
+//THEN IT MULTIPLIES IT BY 2
+unsigned int twice_square(unsigned int value)
+{
+  return 2*value*value;
+}
+
+
+void setup() {
+  // put your setup code here, to run once:
+
+  //HERE WE ARE BEGINNING THE SERIAL COMMUNICATION FROM THE ARDUINO TO THE COMPUTER
+  Serial.begin(9600);
+
+  //HERE WE ARE CREATING A FOR LOOP THAT WILL RUN FOR THE LENGTH OF THE ARRAY_SIZE
+  for(int i=0; i<ARRAY_SIZE; i++)
+  {
+
+  //FOR EACH NUMBER IN ARRAY_SIZE, IT WILL BE TAKEN IN AS I INTO THE FOR LOOP
+  //AND BE TAKEN INTO THE twice_square FUNCTION THAT TAKES IN A VALUE AND MULTIPLIES ITS
+  //SQUARE VALUE BY 2
+  result[i] = twice_square(i);
+
+  //LASTLY, THESE LINES PRINT EACH LINE TO THE SERIAL MONITOR
+  Serial.print(i);
+  Serial.print(":");
+  Serial.println(result[i]);
+  }
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
