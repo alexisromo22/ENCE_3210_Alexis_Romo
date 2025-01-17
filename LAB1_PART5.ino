@@ -1,0 +1,85 @@
+//HERE WE ARE ASSIGNING THE LEDS TO THEIR RESPECTIVE PIN WITH VARIABLE NAMES
+#define GREEN_LED 4  
+#define RED_LED   5  
+
+//HERE WE ARE ASSIGNING THE PATTERN TO BE DETECTED IN THE ARRAY
+int pattern[] = {1, 2, 3};  
+
+//HERE WE ARE WRITING AN ARRAY WITH RANDOM NUMBER, BUT IT ALSO
+//CONTAINS THE PREVIOUSLY WRITTEN PATTERN 3 TIMES
+//THIS INFO CAN BE USED TO VALIDATE WHAT THE SERIAL MONITOR IS OUTPUTTING
+//THIS ARRAY ALSO IS VALIDATING THE LIGHT TURNS GREEN WHEN A PATTERN IS DETECTED
+int inputArray[] = {0, 1, 2, 3, 1, 2, 3, 4, 5, 1, 2, 3}; 
+
+//THIS NEXT PATTERN WAS USED TO MAKE SURE THE SERIAL MONITOR OUTPUTS 0 PATTERNS
+//IT WAS ALSO USED TO MAKE SURE THE RED LED TURNS ON WHEN THERE IS NO PATTERN
+//int inputArray[] = {0, 1, 2, 4, 1, 2, 2, 4, 5, 1, 5, 3};  
+
+//THIS LINE IS TO CALULATE HOW MANY NUMBERS ARE IN THE PATTERN ARRAY
+int patternSize = sizeof(pattern) / sizeof(pattern[0]);  
+
+//THIS LINE IS USED TO CALCULATE HOW MANY NUMBERS ARE IN THE inputArray
+int inputSize = sizeof(inputArray) / sizeof(inputArray[0]);  // Size of the input array
+
+//THIS LINE IS USED TO INITIALIZE THE PATTERN COUNT TO 0 IN ORDER TO COUNT
+//UP EVERY TIME A PATTERN IS DETECTED
+int patternCount = 0; 
+
+void setup() {
+  //HERE WE ARE SETTING THE LEDS TO BE OUTPUTS
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  
+  //HERE THE DIGITAL WRITE IS USED TO START THE PROGRAM WITH THE LEDS OFF
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, LOW);
+}
+
+void loop() {
+  // THIS LINE I USED TO RESET THE PATTERN COUNT EVERY TIME IT GOES THRU THE LOOP
+
+  patternCount = 0;
+  
+  //THIS LINE IS USED TO SUBTRACT THE ELEMENTS IN THE ARRAY MINUS THE ELEMENTS
+  //IN THE PATTERN ARRAY. THIS NUMBER WILL THEN DETERMINE HOW MANY TIMES THIS
+  //FOR LOOP LOOPS
+  //THE FOR LOOP WILL THEN CHECK IF THERE IS A DETECTED PATTERN
+  for (int i = 0; i <= inputSize - patternSize; i++) {
+    bool match = true;
+    
+    // HERE WE ARE CHECKING IF THE PATTERN ARRAY MATCHES THE PATTERN IN THE 
+    //INPUT ARRAY
+    for (int j = 0; j < patternSize; j++) {
+      if (inputArray[i + j] != pattern[j]) {
+        match = false;
+        break;
+      }
+    }
+    
+    //HERE 1 WILL BE ADDED TO THE PATTERN COUNT FOR EVERY TIME THE PATTERN WAS
+    //DETECTED IN THE ARRAY
+    if (match) {
+      patternCount++;
+    }
+  }
+
+ //HERE IF A PATTERN WAS DETECTED AND INCREASED THE PATTERN COUNT TO BE HIGHER
+ //THAN 0 THEN THE GREEN LED WILL TURN ON
+ //OTHERWISE, THE RED LED WILL TURN ON TO INDICATE NO PATTERN WAS FOUND
+  if (patternCount > 0) {
+    digitalWrite(GREEN_LED, HIGH);  // Turn on Green LED
+    digitalWrite(RED_LED, LOW);     // Turn off Red LED
+  } else {
+    digitalWrite(GREEN_LED, LOW);   // Turn off Green LED
+    digitalWrite(RED_LED, HIGH);    // Turn on Red LED
+  }
+
+  //HERE THE RESULTS WILL BE OUTPUTTED TO THE SERIAL MONITOR
+  Serial.begin(9600);
+  Serial.print("Pattern found ");
+  Serial.print(patternCount);
+  Serial.println(" time(s).");
+
+  //HERE THERE IS A SMALL DELAY BEFORE IT RUNS THROUGH THE LOOP AGAIN
+  delay(2000); 
+}
